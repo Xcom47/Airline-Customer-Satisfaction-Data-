@@ -1,0 +1,37 @@
+####### Customer Satisfaction of Airline Survey based on Seat comfort and Inflight wifi service #######
+####### Using Logistic Regression in R by Brian Estvander#######
+
+```{r}
+# Load the airline data set----
+airline <- read.csv("airline.csv")
+
+```
+```{r}
+# View the airline data set----
+View(airline)
+```
+
+```{r}
+# Create new column to divide customer satisfaction between two values: dissatisfied or neutral vs satisfied. We will convert to numeric 0 and 1----
+
+# create new column but fill with 0----
+airline$satisfaction_numeric <- 0
+View(airline)
+
+# attach numeric value to customer satisfaction
+airline[airline$satisfaction == "neutral or dissatisfied",]$satisfaction_numeric = 0
+airline[airline$satisfaction == "satisfied",]$satisfaction_numeric = 1
+View(airline)
+```
+
+```{r}
+# Run logistic regression using one variable(seat comfort) as a predictor variable----
+logit_satisfaction <- glm(airline$satisfaction_numeric ~ airline$`Seat.comfort`, family = "binomial")
+summary(logit_satisfaction)
+```
+```{r}
+# Run logistic regression using two variables as a predictor variables----
+logit_satisfaction <- glm(airline$satisfaction_numeric ~ airline$`Seat.comfort` + airline$`Inflight.wifi.service`, family = "binomial")
+summary(logit_satisfaction)
+```
+##### Seat comfort has a P-value of e-16 so it is very significant. The beta value of 0.603 indicates that seat comfort is a predictor of customer satisfaction. When  you add the additional variable of Inflight wifi service, the P-value remains e-16 so it is very significatnt and the seat comfort predictor remains 0.6 (0.592). While the in flight wifi service beta value is 0.439 and has prediction,in flight wifi service when ccompared with seat comfort is less a concern for customer satisfaction. #####
